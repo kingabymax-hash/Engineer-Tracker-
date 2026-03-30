@@ -1,6 +1,10 @@
-const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY!;
-const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID!;
+const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY || "";
+const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID || "";
 const AIRTABLE_TABLE_ID = "tbl85KKWBIqjNSXsY";
+
+// Debug: log key prefix to verify env var is loaded
+console.log("AIRTABLE_API_KEY loaded:", AIRTABLE_API_KEY ? AIRTABLE_API_KEY.substring(0, 10) + "..." : "MISSING");
+console.log("AIRTABLE_BASE_ID loaded:", AIRTABLE_BASE_ID || "MISSING");
 
 const BASE_URL = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_ID}`;
 
