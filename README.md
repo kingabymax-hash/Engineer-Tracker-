@@ -48,3 +48,4 @@ The Airtable table `FieldLog` must have these fields:
 - Status (Single select: Open / In Progress / Completed)
 - Assigned To (Single line text)
 - Completed Date (Date)
+# FieldLog
