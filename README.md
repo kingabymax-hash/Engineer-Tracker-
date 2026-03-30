@@ -1,6 +1,6 @@
 # FieldLog
 
-Voice-powered field logging tool for client services. Record voice notes, auto-transcribe with OpenAI Whisper, extract structured fields with Google Gemini, and store in Airtable.
+Voice-powered field logging tool for client services. Record voice notes, auto-transcribe and extract structured fields with Google Gemini, and store in Airtable.
 
 ## Setup
 
@@ -14,7 +14,6 @@ Voice-powered field logging tool for client services. Record voice notes, auto-t
    AIRTABLE_API_KEY=your_airtable_personal_access_token
    AIRTABLE_BASE_ID=your_airtable_base_id
    AIRTABLE_TABLE_NAME=FieldLog
-   OPENAI_API_KEY=your_openai_api_key
    GOOGLE_API_KEY=your_google_api_key
    ```
 
