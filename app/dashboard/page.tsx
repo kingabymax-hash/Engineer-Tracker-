@@ -43,7 +43,6 @@ export default function Dashboard() {
   const [filterStatus, setFilterStatus] = useState("All");
   const [filterType, setFilterType] = useState("All");
   const [filterPriority, setFilterPriority] = useState("All");
-  const [editingAssigned, setEditingAssigned] = useState<string | null>(null);
 
   const fetchRecords = useCallback(async () => {
     try {
@@ -235,8 +234,6 @@ export default function Dashboard() {
                         expanded={expandedId === record.id}
                         onToggle={() => setExpandedId(expandedId === record.id ? null : record.id)}
                         onUpdateField={updateField}
-                        editingAssigned={editingAssigned}
-                        setEditingAssigned={setEditingAssigned}
                       />
                     ))}
                   </tbody>
@@ -255,18 +252,15 @@ function RecordRow({
   expanded,
   onToggle,
   onUpdateField,
-  editingAssigned,
-  setEditingAssigned,
 }: {
   record: FieldLogRecord;
   expanded: boolean;
   onToggle: () => void;
   onUpdateField: (id: string, fields: Record<string, unknown>) => void;
-  editingAssigned: string | null;
-  setEditingAssigned: (id: string | null) => void;
 }) {
   const f = record.fields;
-  const [assignedValue, setAssignedValue] = useState(f["Assigned To"] || "");
+
+  const ASSIGNED_OPTIONS = ["", "Hasan ", "George ", "Max ", "Brett"];
 
   return (
     <>
@@ -302,31 +296,16 @@ function RecordRow({
           </select>
         </td>
         <td className="px-4 py-3 hidden lg:table-cell" onClick={(e) => e.stopPropagation()}>
-          {editingAssigned === record.id ? (
-            <input
-              autoFocus
-              value={assignedValue}
-              onChange={(e) => setAssignedValue(e.target.value)}
-              onBlur={() => {
-                onUpdateField(record.id, { "Assigned To": assignedValue });
-                setEditingAssigned(null);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  onUpdateField(record.id, { "Assigned To": assignedValue });
-                  setEditingAssigned(null);
-                }
-              }}
-              className="w-full border border-blue-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          ) : (
-            <span
-              onClick={() => setEditingAssigned(record.id)}
-              className="text-gray-500 hover:text-gray-800 cursor-text"
-            >
-              {f["Assigned To"] || "Click to assign"}
-            </span>
-          )}
+          <select
+            value={f["Assigned To"] || ""}
+            onChange={(e) => onUpdateField(record.id, { "Assigned To": e.target.value || null })}
+            className="rounded-full px-2.5 py-0.5 text-xs font-medium border-0 cursor-pointer bg-gray-100 text-gray-700"
+          >
+            <option value="">Unassigned</option>
+            {ASSIGNED_OPTIONS.filter(Boolean).map((name) => (
+              <option key={name} value={name}>{name.trim()}</option>
+            ))}
+          </select>
         </td>
       </tr>
       {expanded && (
