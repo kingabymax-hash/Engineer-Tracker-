@@ -6,7 +6,8 @@ function getBaseUrl() {
 }
 
 function getHeaders() {
-  const apiKey = process.env.AIRTABLE_API_KEY || "";
+  const apiKey = (process.env.AIRTABLE_API_KEY || "").trim();
+  console.log("AIRTABLE_API_KEY length:", apiKey.length, "prefix:", apiKey.substring(0, 8), "suffix:", apiKey.substring(apiKey.length - 4));
   return {
     Authorization: `Bearer ${apiKey}`,
     "Content-Type": "application/json",
