@@ -7,7 +7,6 @@ function getBaseUrl() {
 
 function getHeaders() {
   const apiKey = (process.env.AIRTABLE_API_KEY || "").trim();
-  console.log("AIRTABLE_API_KEY length:", apiKey.length, "prefix:", apiKey.substring(0, 8), "suffix:", apiKey.substring(apiKey.length - 4));
   return {
     Authorization: `Bearer ${apiKey}`,
     "Content-Type": "application/json",
@@ -54,45 +53,20 @@ export async function getAllRecords(): Promise<FieldLogRecord[]> {
 }
 
 export async function createRecord(fields: Record<string, unknown>): Promise<{ id: string }> {
-  const baseUrl = getBaseUrl();
-  const headers = getHeaders();
-
-  // Step 1: POST with just Client Name to create the record
-  const createRes = await fetch(baseUrl, {
+  const res = await fetch(getBaseUrl(), {
     method: "POST",
-    headers,
-    body: JSON.stringify({
-      fields: { "Client Name": fields["Client Name"] || "Unknown" },
-    }),
+    headers: getHeaders(),
+    body: JSON.stringify({ fields }),
   });
 
-  if (!createRes.ok) {
-    const err = await createRes.text();
-    console.error("Airtable POST error — status:", createRes.status, "body:", err);
-    throw new Error(`Airtable POST failed (${createRes.status}): ${err}`);
+  if (!res.ok) {
+    const err = await res.text();
+    console.error("Airtable POST error — status:", res.status, "body:", err);
+    throw new Error(`Airtable POST failed (${res.status}): ${err}`);
   }
 
-  const created = await createRes.json();
-  const recordId = created.id;
-
-  // Step 2: PATCH the remaining fields onto the record
-  const { "Client Name": _clientName, ...remainingFields } = fields;
-
-  if (Object.keys(remainingFields).length > 0) {
-    const patchRes = await fetch(`${baseUrl}/${recordId}`, {
-      method: "PATCH",
-      headers,
-      body: JSON.stringify({ fields: remainingFields }),
-    });
-
-    if (!patchRes.ok) {
-      const err = await patchRes.text();
-      console.error("Airtable PATCH error — status:", patchRes.status, "body:", err);
-      throw new Error(`Airtable PATCH failed (${patchRes.status}): ${err}`);
-    }
-  }
-
-  return { id: recordId };
+  const data = await res.json();
+  return { id: data.id };
 }
 
 export async function updateRecord(
