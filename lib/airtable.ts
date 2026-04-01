@@ -1,5 +1,5 @@
 const FIELDLOG_TABLE_ID = "tbl85KKWBIqjNSXsY";
-const MEETINGLOG_TABLE_NAME = "MeetingLog";
+const MEETINGLOG_TABLE_ID = "tblndGxGNKz5fJtw5";
 
 function getBaseUrl(table: string) {
   const baseId = process.env.AIRTABLE_BASE_ID || "";
@@ -109,7 +109,7 @@ export async function getAllMeetingRecords(): Promise<MeetingLogRecord[]> {
   let offset: string | undefined;
 
   do {
-    const url = new URL(getBaseUrl(MEETINGLOG_TABLE_NAME));
+    const url = new URL(getBaseUrl(MEETINGLOG_TABLE_ID));
     url.searchParams.set("pageSize", "100");
     url.searchParams.set("sort[0][field]", "Date");
     url.searchParams.set("sort[0][direction]", "desc");
@@ -129,7 +129,7 @@ export async function getAllMeetingRecords(): Promise<MeetingLogRecord[]> {
 }
 
 export async function createMeetingRecord(fields: Record<string, unknown>): Promise<{ id: string }> {
-  const res = await fetch(getBaseUrl(MEETINGLOG_TABLE_NAME), {
+  const res = await fetch(getBaseUrl(MEETINGLOG_TABLE_ID), {
     method: "POST",
     headers: getHeaders(),
     body: JSON.stringify({ fields }),
